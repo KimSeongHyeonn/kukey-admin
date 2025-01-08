@@ -2,6 +2,7 @@
 	import { get } from 'svelte/store';
 	import { apiUrl } from '../store/url';
 	import { authStore } from '../store/auth';
+	import { goto } from '$app/navigation';
 
 	let email = '';
 	let password = '';
@@ -25,7 +26,7 @@
 			if (res.ok) {
 				const data = await res.json();
 				authStore.set(data.token);
-				alert('로그인에 성공했습니다.');
+				goto('/ku-requests');
 			} else {
 				if (res.status === 400) {
 					alert('이메일 또는 비밀번호가 일치하지 않습니다.');
@@ -54,7 +55,7 @@
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
-		height: 100vh;
+		height: calc(100vh - 100px); /* 네비게이션 바 높이 보정 */
 		background-color: #f9f9f9;
 	}
 
