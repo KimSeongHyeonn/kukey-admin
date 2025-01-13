@@ -17,22 +17,26 @@
 				keepingLogin: false
 			};
 
-			const res = await fetch(url + 'auth/login', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify(reqJson)
-			});
+			try {
+				const res = await fetch(url + 'auth/login', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify(reqJson)
+				});
 
-			if (res.ok) {
-				const data = await res.json();
-				authStore.set(data.token);
-				goto('/ku-requests');
-			} else {
-				if (res.status === 400) {
-					alert('이메일 또는 비밀번호가 일치하지 않습니다.');
+				if (res.ok) {
+					const data = await res.json();
+					authStore.set(data.token);
+					goto('/ku-requests');
 				} else {
-					alert('로그인에 실패했습니다.');
+					if (res.status === 400) {
+						alert('이메일 또는 비밀번호가 일치하지 않습니다.');
+					} else {
+						alert('로그인에 실패했습니다.');
+					}
 				}
+			} catch (error) {
+				alert('서버와의 연결에 실패했습니다.');
 			}
 		} else {
 			alert('이메일과 비밀번호를 입력하세요.');
