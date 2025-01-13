@@ -5,7 +5,7 @@ import { apiUrl } from '../store/url';
 const refreshToken = async () => {
 	const url = get(apiUrl);
 	const auth = get(authStore);
-	const res = await fetch(`${url}/auth/refresh`, {
+	const res = await fetch(`${url}auth/refresh`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
@@ -21,7 +21,7 @@ const refreshToken = async () => {
 	}
 };
 
-export const fetchWithAuth = async (url: string, options: RequestInit = {}) => {
+export const fetchWithAuth = async (url: string, options: RequestInit = {}): Promise<any> => {
 	const auth = get(authStore);
 	const headers = new Headers(options.headers);
 	if (auth.accessToken) {
