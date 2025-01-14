@@ -33,7 +33,11 @@ export const fetchWithAuth = async (url: string, options: RequestInit = {}): Pro
 	const res = await fetch(url, { ...options, headers });
 	if (res.ok) {
 		isLoading.set(false);
-		return res.json();
+		try {
+			return await res.json();
+		} catch (e) {
+			return res;
+		}
 	} else {
 		if (res.status === 401) {
 			const success = await refreshToken();
