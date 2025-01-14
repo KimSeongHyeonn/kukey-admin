@@ -95,7 +95,6 @@
 	.navbar-logo h1 {
 		font-size: 24px;
 		font-weight: bold;
-		cursor: pointer;
 		color: #fff;
 		margin: 0;
 	}
