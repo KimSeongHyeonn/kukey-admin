@@ -6,6 +6,7 @@ import { isLoading } from '../store/loading';
 const refreshToken = async () => {
 	const url = get(apiUrl);
 	const auth = get(authStore);
+	if (!auth.refreshToken) return false;
 	const res = await fetch(`${url}auth/refresh`, {
 		method: 'POST',
 		headers: {
