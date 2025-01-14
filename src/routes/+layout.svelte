@@ -51,7 +51,7 @@
 	</nav>
 {/if}
 
-<main>
+<main class={page.url.pathname === '/' ? 'no-padding' : ''}>
 	<slot />
 </main>
 
@@ -143,8 +143,12 @@
 
 	/* 메인 콘텐츠 스타일 */
 	main {
-		padding-top: 70px;
-		background-color: #f4f4f9;
+		padding-top: 55px;
+		background-color: #f9f9f9;
+	}
+
+	.no-padding {
+		padding-top: 0;
 	}
 
 	/* 반응형 스타일 (모바일) */

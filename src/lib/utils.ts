@@ -43,6 +43,5 @@ export const fetchWithAuth = async (url: string, options: RequestInit = {}): Pro
 
 export const checkAuth = () => {
 	const token = get(authStore);
-	console.log(token);
 	return token.accessToken !== null;
 };
