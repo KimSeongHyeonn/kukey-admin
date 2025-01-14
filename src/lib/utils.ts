@@ -1,6 +1,7 @@
 import { get } from 'svelte/store';
 import { authStore } from '../store/auth';
 import { apiUrl } from '../store/url';
+import { isLoading } from '../store/loading';
 
 const refreshToken = async () => {
 	const url = get(apiUrl);
@@ -22,6 +23,7 @@ const refreshToken = async () => {
 };
 
 export const fetchWithAuth = async (url: string, options: RequestInit = {}): Promise<any> => {
+	isLoading.set(true);
 	const auth = get(authStore);
 	const headers = new Headers(options.headers);
 	if (auth.accessToken) {
@@ -29,14 +31,17 @@ export const fetchWithAuth = async (url: string, options: RequestInit = {}): Pro
 	}
 	const res = await fetch(url, { ...options, headers });
 	if (res.ok) {
+		isLoading.set(false);
 		return res.json();
 	} else {
 		if (res.status === 401) {
 			const success = await refreshToken();
 			if (success) {
+				isLoading.set(false);
 				return fetchWithAuth(url, options);
 			}
 		}
+		isLoading.set(false);
 		return null;
 	}
 };
