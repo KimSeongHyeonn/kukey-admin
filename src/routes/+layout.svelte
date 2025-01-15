@@ -1,4 +1,5 @@
 <script lang="ts">
+	import '../app.css';
 	import { afterNavigate, beforeNavigate, goto } from '$app/navigation';
 	import { page } from '$app/state';
 	import { checkAuth } from '$lib/utils';
@@ -73,6 +74,16 @@
 </main>
 
 <style>
+	/* 메인 콘텐츠 스타일 */
+	main {
+		padding-top: 55px;
+		background-color: #f9f9f9;
+	}
+
+	.no-padding {
+		padding-top: 0;
+	}
+
 	/* 네비게이션 바 스타일 */
 	.navbar {
 		display: flex;
@@ -97,14 +108,15 @@
 		font-weight: bold;
 		color: #fff;
 		margin: 0;
+		line-height: 1;
 	}
 
 	/* 햄버거 메뉴 버튼 스타일 */
 	.navbar-burger {
 		display: none;
 		flex-direction: column;
+		justify-content: space-around;
 		cursor: pointer;
-		gap: 5px;
 		background: none;
 		border: none;
 		padding: 0;
@@ -113,16 +125,17 @@
 	}
 
 	.navbar-burger span {
-		width: 100%;
+		display: block;
+		width: 24px;
 		height: 3px;
 		background-color: #fff;
 		border-radius: 2px;
 		transition: all 0.3s ease-in-out;
 	}
 
-	/* 햄버거 메뉴 버튼 활성화 상태 */
+	/* 햄버거 메뉴 버튼 활성화 상태 (X자 모양) */
 	.navbar-burger.is-active span:nth-child(1) {
-		transform: rotate(45deg) translate(5px, 5px);
+		transform: rotate(45deg) translate(7px, 7px);
 	}
 
 	.navbar-burger.is-active span:nth-child(2) {
@@ -130,7 +143,7 @@
 	}
 
 	.navbar-burger.is-active span:nth-child(3) {
-		transform: rotate(-45deg) translate(5px, -5px);
+		transform: rotate(-45deg) translate(7px, -7px);
 	}
 
 	/* 네비게이션 링크 스타일 */
@@ -157,18 +170,16 @@
 		color: white;
 	}
 
-	/* 메인 콘텐츠 스타일 */
-	main {
-		padding-top: 55px;
-		background-color: #f9f9f9;
-	}
-
-	.no-padding {
-		padding-top: 0;
-	}
-
 	/* 반응형 스타일 (모바일) */
 	@media (max-width: 768px) {
+		.navbar {
+			padding: 1rem;
+		}
+
+		.navbar-logo {
+			flex-grow: 1;
+		}
+
 		.navbar-links {
 			display: none;
 			flex-direction: column;
