@@ -31,6 +31,9 @@
 
 	// 배너 삭제 함수
 	const deleteBanner = async (id: number) => {
+		const isConfirmed = confirm('정말로 삭제하시겠습니까?');
+		if (!isConfirmed) return;
+
 		const response = await fetchWithAuth(url + `banner/${id}`, {
 			method: 'DELETE'
 		});
