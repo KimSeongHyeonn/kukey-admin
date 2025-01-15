@@ -78,6 +78,18 @@
 			ids.includes(id) ? ids.filter((openId) => openId !== id) : [...ids, id]
 		);
 	};
+	// 슬라이더 인덱스 관리
+	const sliderIndex: Record<number, number> = {};
+
+	const nextSlide = (id: number) => {
+		const length = reportDetails[id].reportedPost.imgDirs.length;
+		sliderIndex[id] = sliderIndex[id] ? (sliderIndex[id] + 1) % length : 1 % length;
+	};
+
+	const prevSlide = (id: number) => {
+		const length = reportDetails[id].reportedPost.imgDirs.length;
+		sliderIndex[id] = sliderIndex[id] ? (sliderIndex[id] - 1) % length : length - 1;
+	};
 </script>
 
 <main>
@@ -116,15 +128,39 @@
 						<div class="card-details">
 							{#if reportDetails[report.id]?.reportedPost}
 								<!-- Reported Post 세부 내용 -->
-								<h3>Reported Post</h3>
 								<p><strong>Title:</strong> {reportDetails[report.id].reportedPost.title}</p>
 								<p><strong>Content:</strong> {reportDetails[report.id].reportedPost.content}</p>
-								{#each reportDetails[report.id].reportedPost.imgDirs as imgDir}
-									<img src={imgDir} alt="Reported Post" class="detail-image" />
-								{/each}
+								<!-- 이미지 캐러셀 부분 수정 -->
+								{#if reportDetails[report.id]?.reportedPost.imgDirs.length > 0}
+									<div class="carousel">
+										<!-- 이전 버튼 -->
+										{#if reportDetails[report.id].reportedPost.imgDirs.length > 1}
+											<button class="carousel-button prev" on:click={() => prevSlide(report.id)}
+												>‹</button
+											>
+										{/if}
+
+										<!-- 이미지 표시 -->
+										<div class="carousel-frame">
+											<img
+												src={reportDetails[report.id].reportedPost.imgDirs[
+													sliderIndex[report.id] ?? 0
+												]}
+												alt="Reported Post"
+												class="carousel-image"
+											/>
+										</div>
+
+										<!-- 다음 버튼 -->
+										{#if reportDetails[report.id].reportedPost.imgDirs.length > 1}
+											<button class="carousel-button next" on:click={() => nextSlide(report.id)}
+												>›</button
+											>
+										{/if}
+									</div>
+								{/if}
 							{:else if reportDetails[report.id]?.reportedComment}
 								<!-- Reported Comment 세부 내용 -->
-								<h3>Reported Comment</h3>
 								<p><strong>Content:</strong> {reportDetails[report.id].reportedComment.content}</p>
 							{:else}
 								<p>Loading...</p>
@@ -167,6 +203,7 @@
 	.card-container {
 		display: flex;
 		flex-direction: column;
+		align-items: center;
 		gap: 1.5rem;
 	}
 
@@ -176,6 +213,8 @@
 		padding: 1rem;
 		border-radius: 8px;
 		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+		width: 100%;
+		max-width: 800px;
 	}
 
 	/* 카드 헤더 스타일 */
@@ -215,23 +254,63 @@
 		border-radius: 6px;
 	}
 
-	.card-details h3 {
-		margin-bottom: 0.5rem;
-		font-size: 18px;
-		color: #333;
-	}
-
 	.card-details p {
 		margin: 0.5rem 0;
 	}
 
-	/* 이미지 스타일 */
-	.detail-image {
+	/* 캐러셀 스타일 */
+	.carousel {
+		position: relative;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		margin-bottom: 1rem;
+	}
+
+	.carousel-frame {
 		width: 100%;
-		height: auto;
+		max-width: 800px;
+		height: 400px;
+		background-color: black;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 		border-radius: 8px;
-		margin-top: 0.5rem;
-		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+		overflow: hidden;
+	}
+
+	.carousel-image {
+		max-width: 100%;
+		max-height: 100%;
+		object-fit: contain;
+		border-radius: 8px;
+	}
+
+	/* 버튼 스타일 */
+	.carousel-button {
+		position: absolute;
+		background-color: rgba(0, 0, 0, 0.5);
+		color: white;
+		border: none;
+		cursor: pointer;
+		padding: 0.5rem;
+		font-size: 24px;
+		border-radius: 50%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.carousel-button.prev {
+		left: 10px;
+	}
+
+	.carousel-button.next {
+		right: 10px;
+	}
+
+	.carousel-button:hover {
+		background-color: rgba(0, 0, 0, 0.8);
 	}
 
 	/* 토글 버튼 스타일 */
