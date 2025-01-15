@@ -65,6 +65,7 @@
 	<h1>Authentication request</h1>
 
 	{#if requests.length > 0}
+		<p>남은 인증 요청 수 : {requests.length}</p>
 		<div class="card-container">
 			{#each requests as request}
 				<div class="card">
@@ -111,6 +112,11 @@
 	}
 
 	h1 {
+		text-align: center;
+		margin-bottom: 1rem;
+	}
+
+	p {
 		text-align: center;
 		margin-bottom: 2rem;
 	}
