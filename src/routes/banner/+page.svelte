@@ -171,7 +171,6 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		margin-bottom: 2rem;
 		max-width: 800px;
 		margin: 0 auto;
 		margin-bottom: 1rem;
