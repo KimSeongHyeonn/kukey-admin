@@ -266,11 +266,15 @@
 				<h2>Edit Schedule</h2>
 				<div class="form-group">
 					<label for="title">Title</label>
-					<input id="title" type="text" bind:value={selectedSchedule.title} />
+					<input id="title" type="text" bind:value={selectedSchedule.title} placeholder="Title" />
 				</div>
 				<div class="form-group">
 					<label for="description">Description</label>
-					<textarea id="description" bind:value={selectedSchedule.description}></textarea>
+					<textarea
+						id="description"
+						bind:value={selectedSchedule.description}
+						placeholder="Description"
+					></textarea>
 				</div>
 				<div class="form-group">
 					<label for="start-date">Start Date</label>
@@ -295,11 +299,12 @@
 				<h2>Add Schedule</h2>
 				<div class="form-group">
 					<label for="title">Title</label>
-					<input id="title" type="text" bind:value={newSchedule.title} />
+					<input id="title" type="text" bind:value={newSchedule.title} placeholder="Title" />
 				</div>
 				<div class="form-group">
 					<label for="description">Description</label>
-					<textarea id="description" bind:value={newSchedule.description}></textarea>
+					<textarea id="description" bind:value={newSchedule.description} placeholder="Description"
+					></textarea>
 				</div>
 				<div class="form-group">
 					<label for="start-date">Start Date</label>
@@ -489,6 +494,7 @@
 		border: 1px solid #ccc;
 		border-radius: 5px;
 		box-sizing: border-box;
+		font-family: 'Noto Sans KR', 'Roboto', sans-serif;
 	}
 
 	textarea {
