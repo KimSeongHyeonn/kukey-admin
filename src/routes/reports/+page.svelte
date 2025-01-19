@@ -135,9 +135,13 @@
 									<div class="carousel">
 										<!-- 이전 버튼 -->
 										{#if reportDetails[report.id].reportedPost.imgDirs.length > 1}
-											<button class="carousel-button prev" on:click={() => prevSlide(report.id)}
-												>‹</button
+											<button
+												class="carousel-button prev"
+												on:click={() => prevSlide(report.id)}
+												aria-label="Previous slide"
 											>
+												<i class="fa-solid fa-chevron-left"></i>
+											</button>
 										{/if}
 
 										<!-- 이미지 표시 -->
@@ -153,9 +157,13 @@
 
 										<!-- 다음 버튼 -->
 										{#if reportDetails[report.id].reportedPost.imgDirs.length > 1}
-											<button class="carousel-button next" on:click={() => nextSlide(report.id)}
-												>›</button
+											<button
+												class="carousel-button next"
+												on:click={() => nextSlide(report.id)}
+												aria-label="Next slide"
 											>
+												<i class="fa-solid fa-chevron-right"></i>
+											</button>
 										{/if}
 									</div>
 								{/if}
