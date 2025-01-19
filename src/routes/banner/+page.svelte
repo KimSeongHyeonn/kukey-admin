@@ -164,7 +164,7 @@
 
 	h1 {
 		text-align: center;
-		margin-bottom: 1rem;
+		margin-bottom: 2rem;
 	}
 
 	.header-container {
@@ -262,7 +262,6 @@
 		border-radius: 5px;
 		cursor: pointer;
 		font-size: 16px;
-		margin-bottom: 1rem;
 	}
 
 	.upload-banner-button:hover {

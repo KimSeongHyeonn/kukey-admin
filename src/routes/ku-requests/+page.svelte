@@ -113,12 +113,12 @@
 
 	h1 {
 		text-align: center;
-		margin-bottom: 1rem;
+		margin-bottom: 2rem;
 	}
 
 	p {
 		text-align: center;
-		margin-bottom: 2rem;
+		margin-bottom: 1rem;
 	}
 
 	/* 카드 컨테이너 */
