@@ -26,6 +26,10 @@
 
 				if (res.ok) {
 					const data = await res.json();
+					if (data.verified === false) {
+						alert('인증되지 않은 계정입니다.');
+						return;
+					}
 					authStore.set(data.token);
 					goto('/ku-requests');
 				} else {
