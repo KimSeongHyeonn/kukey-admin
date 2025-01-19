@@ -157,7 +157,7 @@
 			!newSchedule.startDate ||
 			!newSchedule.endDate
 		) {
-			alert('빈 필드가 존재합니다다.');
+			alert('빈 필드가 존재합니다.');
 			return;
 		}
 
