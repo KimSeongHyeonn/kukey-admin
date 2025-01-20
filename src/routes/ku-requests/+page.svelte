@@ -10,10 +10,7 @@
 		const data = await fetchWithAuth(url + 'auth/admin/request', {
 			method: 'GET'
 		});
-		if (!data) {
-			goto('/');
-			alert('로그인이 필요합니다.');
-		}
+
 		return data;
 	};
 
@@ -38,10 +35,7 @@
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify(reqJson)
 		});
-		if (!data) {
-			goto('/');
-			alert('로그인이 필요합니다.');
-		}
+
 		if (data.success) {
 			requests = requests.filter((request) => request.id !== id);
 		}

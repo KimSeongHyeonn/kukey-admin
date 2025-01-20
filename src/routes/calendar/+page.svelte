@@ -1,8 +1,7 @@
 <script lang="ts">
 	import { get } from 'svelte/store';
 	import { apiUrl } from '../../store/url';
-	import { fetchWithAuth } from '$lib/utils';
-	import { goto } from '$app/navigation';
+	import { fetchWithAuth, gotoWithBase } from '$lib/utils';
 	import { onMount } from 'svelte';
 
 	const url = get(apiUrl);
@@ -16,10 +15,7 @@
 		const data = await fetchWithAuth(url + `calendar/academic?year=${year}&semester=${semester}`, {
 			method: 'GET'
 		});
-		if (!data) {
-			goto('/');
-			alert('로그인이 필요합니다.');
-		}
+
 		return data;
 	};
 
@@ -131,11 +127,6 @@
 			},
 			body: JSON.stringify(reqJson)
 		});
-		if (!response) {
-			goto('/');
-			alert('로그인이 필요합니다.');
-			return;
-		}
 
 		alert('일정이 수정되었습니다.');
 		isEditModalOpen = false;
@@ -168,11 +159,6 @@
 			},
 			body: JSON.stringify(reqJson)
 		});
-		if (!response) {
-			goto('/');
-			alert('로그인이 필요합니다.');
-			return;
-		}
 
 		alert('일정이 추가되었습니다.');
 		isAddModalOpen = false;
@@ -187,12 +173,6 @@
 		const response = await fetchWithAuth(url + `calendar/${id}`, {
 			method: 'DELETE'
 		});
-
-		if (!response) {
-			goto('/');
-			alert('로그인이 필요합니다.');
-			return;
-		}
 
 		alert('일정이 삭제되었습니다.');
 		await loadCalendarData();

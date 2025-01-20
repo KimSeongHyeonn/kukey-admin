@@ -2,7 +2,6 @@
 	import { get } from 'svelte/store';
 	import { apiUrl } from '../../store/url';
 	import { fetchWithAuth } from '$lib/utils';
-	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
 
 	// API URL 가져오기
@@ -13,10 +12,7 @@
 		const data = await fetchWithAuth(url + 'banner', {
 			method: 'GET'
 		});
-		if (!data) {
-			goto('/');
-			alert('로그인이 필요합니다.');
-		}
+
 		return data;
 	};
 
@@ -37,10 +33,7 @@
 		const response = await fetchWithAuth(url + `banner/${id}`, {
 			method: 'DELETE'
 		});
-		if (!response) {
-			goto('/');
-			alert('로그인이 필요합니다.');
-		}
+
 		banners = banners.filter((banner) => banner.id !== id);
 		alert('배너가 삭제되었습니다.');
 	};
@@ -82,10 +75,6 @@
 			body: formData
 		});
 
-		if (!data) {
-			goto('/');
-			alert('로그인이 필요합니다.');
-		}
 		alert('배너가 추가되었습니다.');
 		const newBanner = data;
 		banners = [newBanner, ...banners];

@@ -12,10 +12,7 @@
 		const data = await fetchWithAuth(url + 'report', {
 			method: 'GET'
 		});
-		if (!data) {
-			goto('/');
-			alert('로그인이 필요합니다.');
-		}
+
 		return data;
 	};
 
@@ -40,10 +37,7 @@
 		const data = await fetchWithAuth(url + 'report/' + id, {
 			method: 'POST'
 		});
-		if (!data) {
-			goto('/');
-			alert('로그인이 필요합니다.');
-		}
+
 		return data;
 	};
 

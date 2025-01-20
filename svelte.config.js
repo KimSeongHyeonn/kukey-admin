@@ -15,8 +15,11 @@ const config = {
 			pages: 'build',
 			assets: 'build',
 			fallback: 'index.html',
-			strict: true
-		})
+			precompress: false
+		}),
+		paths: {
+			base: '/admin'
+		}
 	}
 };
 

@@ -62,10 +62,7 @@
 		const data = await fetchWithAuth(finalUrl, {
 			method: 'GET'
 		});
-		if (!data) {
-			goto('/');
-			alert('로그인이 필요합니다.');
-		}
+
 		return data;
 	};
 
@@ -184,10 +181,7 @@
 			method: 'POST',
 			body: formData
 		});
-		if (!response) {
-			goto('/');
-			alert('로그인이 필요합니다.');
-		}
+
 		alert('클럽이 추가되었습니다.');
 		closeAddModal();
 		await loadClubData();
@@ -255,10 +249,7 @@
 			method: 'PATCH',
 			body: formData
 		});
-		if (!response) {
-			goto('/');
-			alert('로그인이 필요합니다.');
-		}
+
 		alert('클럽이 수정되었습니다.');
 		closeEditModal();
 		await loadClubData();
@@ -269,10 +260,7 @@
 		const response = await fetchWithAuth(url + 'club/' + clubId, {
 			method: 'DELETE'
 		});
-		if (!response) {
-			goto('/');
-			alert('로그인이 필요합니다.');
-		}
+
 		alert('클럽이 삭제되었습니다.');
 		await loadClubData();
 	};

@@ -2,7 +2,7 @@
 	import { get } from 'svelte/store';
 	import { apiUrl } from '../store/url';
 	import { authStore } from '../store/auth';
-	import { goto } from '$app/navigation';
+	import { gotoWithBase } from '$lib/utils';
 
 	let email = '';
 	let password = '';
@@ -31,7 +31,7 @@
 						return;
 					}
 					authStore.set(data.token);
-					goto('/ku-requests');
+					gotoWithBase('/ku-requests');
 				} else {
 					if (res.status === 400) {
 						alert('이메일 또는 비밀번호가 일치하지 않습니다.');

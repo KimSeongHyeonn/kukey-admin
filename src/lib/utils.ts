@@ -2,6 +2,8 @@ import { get } from 'svelte/store';
 import { authStore } from '../store/auth';
 import { apiUrl } from '../store/url';
 import { isLoading } from '../store/loading';
+import { goto } from '$app/navigation';
+import { base } from '$app/paths';
 
 const refreshToken = async () => {
 	const url = get(apiUrl);
@@ -47,6 +49,8 @@ export const fetchWithAuth = async (url: string, options: RequestInit = {}): Pro
 			}
 		}
 		isLoading.set(false);
+		alert('로그인이 필요합니다.');
+		gotoWithBase('/');
 		return null;
 	}
 };
@@ -54,4 +58,8 @@ export const fetchWithAuth = async (url: string, options: RequestInit = {}): Pro
 export const checkAuth = () => {
 	const token = get(authStore);
 	return token.accessToken !== null;
+};
+
+export const gotoWithBase = (href: string) => {
+	goto(`${base}${href}`);
 };
