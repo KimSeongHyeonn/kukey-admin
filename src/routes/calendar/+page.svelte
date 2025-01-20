@@ -351,6 +351,14 @@
 			gap: 1rem;
 			text-align: center;
 		}
+
+		.selection-container {
+			width: 100%;
+		}
+
+		.add-button {
+			width: 100%;
+		}
 	}
 
 	/* 선택 섹션 스타일 */

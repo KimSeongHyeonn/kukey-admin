@@ -188,6 +188,10 @@
 			gap: 1rem;
 			text-align: center;
 		}
+
+		.upload-banner-button {
+			width: 100%;
+		}
 	}
 
 	/* 배너 목록 스타일 */
