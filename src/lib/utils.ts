@@ -48,6 +48,12 @@ export const fetchWithAuth = async (url: string, options: RequestInit = {}): Pro
 				return fetchWithAuth(url, options);
 			}
 		}
+		if (res.status === 404) {
+			isLoading.set(false);
+			alert('페이지를 찾을 수 없습니다.');
+			window.history.back();
+			return null;
+		}
 		isLoading.set(false);
 		alert('로그인이 필요합니다.');
 		gotoWithBase('/');
