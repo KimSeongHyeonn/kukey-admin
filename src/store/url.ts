@@ -1,4 +1,4 @@
-import { writable } from 'svelte/store';
+import { readable } from 'svelte/store';
+import { PUBLIC_API_URL } from '$env/static/public';
 
-// API URL 전역 상태
-export const apiUrl = writable<string>('http://localhost:3000/');
+export const apiUrl = readable<string>(PUBLIC_API_URL || 'http://localhost:3000/');
