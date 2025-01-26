@@ -187,7 +187,8 @@
 			background-color: #1e1e1e;
 			position: absolute;
 			top: 60px;
-			right: 0;
+			left: 50%;
+			transform: translateX(-50%);
 			width: 100%;
 			padding: 1rem 2rem;
 		}
