@@ -2,7 +2,7 @@
 	import { onMount } from 'svelte';
 	import { get } from 'svelte/store';
 	import { apiUrl } from '../../store/url';
-	import { fetchWithAuth } from '$lib/utils';
+	import { fetchWithAuth, replaceSpecialCharacters } from '$lib/utils';
 	import { goto } from '$app/navigation';
 
 	const category = [
@@ -56,8 +56,8 @@
 
 	const getClub = async (keyword: string, category: CategoryType) => {
 		let finalUrl = url + 'club?isLogin=false';
-		if (keyword) finalUrl += `&keyword=${keyword}`;
-		if (category !== '전체 카테고리') finalUrl += `&category=${category}`;
+		if (keyword) finalUrl += `&keyword=${replaceSpecialCharacters(keyword)}`;
+		if (category !== '전체 카테고리') finalUrl += `&category=${replaceSpecialCharacters(category)}`;
 
 		const data = await fetchWithAuth(finalUrl, {
 			method: 'GET'

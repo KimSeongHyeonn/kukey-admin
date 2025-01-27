@@ -69,3 +69,7 @@ export const checkAuth = () => {
 export const gotoWithBase = (href: string) => {
 	goto(`${base}${href}`);
 };
+
+export const replaceSpecialCharacters = (str: string) => {
+	return str.replace(/&/g, '%26').replace(/\+/g, '%2B').replace(/=/g, '%3D');
+};
