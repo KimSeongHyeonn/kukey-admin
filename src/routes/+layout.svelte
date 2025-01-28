@@ -32,38 +32,37 @@
 </script>
 
 <!-- 네비게이션 바 -->
-{#if page.url.pathname !== '/'}
-	<nav class="navbar">
-		<div class="navbar-logo">
-			<h1>🍪KU-key Admin</h1>
-		</div>
 
-		<!-- 햄버거 메뉴 버튼 -->
-		<button
-			class="navbar-burger"
-			on:click={() => isMenuOpen.update((v) => !v)}
-			class:is-active={$isMenuOpen}
-			type="button"
-			aria-label="Toggle navigation"
-		>
-			<span></span>
-			<span></span>
-			<span></span>
-		</button>
+<nav class="navbar">
+	<div class="navbar-logo">
+		<h1>🍪KU-key Admin</h1>
+	</div>
 
-		<!-- 네비게이션 링크 -->
-		<div class="navbar-links {$isMenuOpen ? 'is-active' : ''}">
-			<button on:click={() => navigate('/ku-requests')}>KU-Requests</button>
-			<button on:click={() => navigate('/reports')}>Reports</button>
-			<button on:click={() => navigate('/calendar')}>Calendar</button>
-			<button on:click={() => navigate('/club')}>Club</button>
-			<button on:click={() => navigate('/banner')}>Banner</button>
-			<!-- 추가된 버튼 -->
-		</div>
-	</nav>
-{/if}
+	<!-- 햄버거 메뉴 버튼 -->
+	<button
+		class="navbar-burger"
+		on:click={() => isMenuOpen.update((v) => !v)}
+		class:is-active={$isMenuOpen}
+		type="button"
+		aria-label="Toggle navigation"
+	>
+		<span></span>
+		<span></span>
+		<span></span>
+	</button>
 
-<main class={page.url.pathname === '/' ? 'no-padding' : ''}>
+	<!-- 네비게이션 링크 -->
+	<div class="navbar-links {$isMenuOpen ? 'is-active' : ''}">
+		<button on:click={() => navigate('/ku-requests')}>KU-Requests</button>
+		<button on:click={() => navigate('/reports')}>Reports</button>
+		<button on:click={() => navigate('/calendar')}>Calendar</button>
+		<button on:click={() => navigate('/club')}>Club</button>
+		<button on:click={() => navigate('/banner')}>Banner</button>
+		<!-- 추가된 버튼 -->
+	</div>
+</nav>
+
+<main>
 	<!-- 로딩 스피너 표시 -->
 	{#if $isLoading}
 		<div class="loading-overlay">
@@ -79,10 +78,6 @@
 	main {
 		padding-top: 55px;
 		background-color: #f9f9f9;
-	}
-
-	.no-padding {
-		padding-top: 0;
 	}
 
 	/* 네비게이션 바 스타일 */

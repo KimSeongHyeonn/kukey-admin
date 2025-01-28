@@ -1,4 +1,4 @@
 import { writable } from 'svelte/store';
 
-// API URL 전역 상태
+// loading store
 export const isLoading = writable<boolean>(false);

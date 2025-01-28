@@ -3,11 +3,13 @@
 	import { apiUrl } from '../store/url';
 	import { authStore } from '../store/auth';
 	import { gotoWithBase } from '$lib/utils';
+	import { isLoading } from '../store/loading';
 
 	let email = '';
 	let password = '';
 
 	const handleLogin = async () => {
+		isLoading.set(true);
 		if (email && password) {
 			const url = get(apiUrl);
 
@@ -41,9 +43,12 @@
 				}
 			} catch (error) {
 				alert('서버와의 연결에 실패했습니다.');
+			} finally {
+				isLoading.set(false);
 			}
 		} else {
 			alert('이메일과 비밀번호를 입력하세요.');
+			isLoading.set(false);
 		}
 	};
 </script>
