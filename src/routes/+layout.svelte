@@ -1,11 +1,9 @@
 <script lang="ts">
 	import '../app.css';
 	import { afterNavigate, beforeNavigate } from '$app/navigation';
-	import { page } from '$app/state';
 	import { checkAuth, gotoWithBase } from '$lib/utils';
 	import { writable } from 'svelte/store';
 	import { isLoading } from '../store/loading';
-	import { base } from '$app/paths';
 
 	// 햄버거 메뉴 상태 관리
 	const isMenuOpen = writable(false);
@@ -32,7 +30,6 @@
 </script>
 
 <!-- 네비게이션 바 -->
-
 <nav class="navbar">
 	<div class="navbar-logo">
 		<h1>🍪KU-key Admin</h1>
@@ -70,14 +67,24 @@
 		</div>
 	{/if}
 
-	<slot />
+	<div class="container">
+		<slot />
+	</div>
 </main>
 
 <style>
 	/* 메인 콘텐츠 스타일 */
 	main {
-		padding-top: 55px;
+		padding-top: 60px;
 		background-color: #f9f9f9;
+		height: 100vh;
+	}
+
+	/* 컨테이너 스타일 */
+	.container {
+		max-width: 800px;
+		margin: 0 auto;
+		padding: 1rem;
 	}
 
 	/* 네비게이션 바 스타일 */
@@ -91,20 +98,17 @@
 		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 		position: fixed;
 		width: 100%;
+		height: 60px;
 		top: 0;
 		left: 0;
-		height: 60px;
 		z-index: 1000;
-		box-sizing: border-box;
 	}
 
 	/* 로고 스타일 */
 	.navbar-logo h1 {
 		font-size: 24px;
 		font-weight: bold;
-		color: #fff;
-		margin: 0;
-		line-height: 1;
+		color: white;
 	}
 
 	/* 햄버거 메뉴 버튼 스타일 */
@@ -124,7 +128,7 @@
 		display: block;
 		width: 24px;
 		height: 3px;
-		background-color: #fff;
+		background-color: white;
 		border-radius: 2px;
 		transition: all 0.3s ease-in-out;
 	}
