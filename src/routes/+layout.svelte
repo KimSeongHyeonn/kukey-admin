@@ -1,9 +1,10 @@
 <script lang="ts">
-	import '../app.css';
+	import '$lib/styles/global.css';
 	import { afterNavigate, beforeNavigate } from '$app/navigation';
-	import { checkAuth, gotoWithBase } from '$lib/utils';
 	import { writable } from 'svelte/store';
-	import { isLoading } from '../store/loading';
+	import { isLoading } from '$lib/stores/loading';
+	import { checkAuth } from '$lib/utils/auth';
+	import { gotoWithBase } from '$lib/utils/goto';
 
 	// 햄버거 메뉴 상태 관리
 	const isMenuOpen = writable(false);
@@ -55,7 +56,6 @@
 		<button on:click={() => navigate('/calendar')}>Calendar</button>
 		<button on:click={() => navigate('/club')}>Club</button>
 		<button on:click={() => navigate('/banner')}>Banner</button>
-		<!-- 추가된 버튼 -->
 	</div>
 </nav>
 
