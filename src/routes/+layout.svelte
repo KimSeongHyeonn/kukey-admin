@@ -5,6 +5,7 @@
 	import { isLoading } from '$lib/stores/loading';
 	import { checkAuth } from '$lib/utils/auth';
 	import { gotoWithBase } from '$lib/utils/goto';
+	import DarkBackground from '$lib/components/DarkBackground.svelte';
 
 	// 햄버거 메뉴 상태 관리
 	const isMenuOpen = writable(false);
@@ -61,11 +62,9 @@
 
 <main>
 	<!-- 로딩 스피너 표시 -->
-	{#if $isLoading}
-		<div class="loading-overlay">
-			<div class="spinner"></div>
-		</div>
-	{/if}
+	<DarkBackground isOpen={$isLoading}>
+		<div class="spinner"></div>
+	</DarkBackground>
 
 	<div class="container">
 		<slot />
@@ -199,20 +198,6 @@
 		.navbar-burger {
 			display: flex;
 		}
-	}
-
-	/* 로딩 오버레이 스타일 */
-	.loading-overlay {
-		position: fixed;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-		background-color: rgba(0, 0, 0, 0.5);
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		z-index: 2000;
 	}
 
 	/* 스피너 스타일 */
