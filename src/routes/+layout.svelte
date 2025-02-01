@@ -62,7 +62,7 @@
 
 <main>
 	<!-- 로딩 스피너 표시 -->
-	<DarkBackground isOpen={$isLoading}>
+	<DarkBackground isOpen={$isLoading} zIndex={3000}>
 		<div class="spinner"></div>
 	</DarkBackground>
 

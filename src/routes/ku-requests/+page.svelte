@@ -1,18 +1,12 @@
 <script lang="ts">
 	import { get, writable } from 'svelte/store';
-	import { apiUrl } from '../../store/url';
-	import { fetchWithAuth } from '$lib/utils';
 	import { onMount } from 'svelte';
-	import { goto } from '$app/navigation';
+	import { fetchWithAuth } from '$lib/utils/fetch';
+	import Button from '$lib/components/Button.svelte';
+	import DarkBackground from '$lib/components/DarkBackground.svelte';
+	import { apiUrl } from '$lib/stores/url';
 
 	const url = get(apiUrl);
-	const getRequests = async () => {
-		const data = await fetchWithAuth(url + 'auth/admin/request', {
-			method: 'GET'
-		});
-
-		return data;
-	};
 
 	let requests: {
 		id: number;
@@ -20,6 +14,14 @@
 		studentNumber: number;
 		lastUpdated: Date;
 	}[] = [];
+
+	const getRequests = async () => {
+		const data = await fetchWithAuth(url + 'auth/admin/request', {
+			method: 'GET'
+		});
+
+		return data;
+	};
 
 	onMount(async () => {
 		const data = await getRequests();
@@ -38,6 +40,7 @@
 
 		if (data.success) {
 			requests = requests.filter((request) => request.id !== id);
+			alert(isAllow ? '인증이 완료되었습니다.' : '인증이 거절되었습니다.');
 		}
 	};
 
@@ -56,65 +59,46 @@
 </script>
 
 <main>
-	<h1>Authentication request</h1>
+	<h1 class="title">Authentication request</h1>
 
 	{#if requests.length > 0}
-		<p>남은 인증 요청 수 : {requests.length}</p>
+		<p class="description">남은 인증 요청 수 : {requests.length}</p>
 		<div class="card-container">
 			{#each requests as request}
 				<div class="card">
 					<button
 						class="image-button"
-						type="button"
 						on:click={() => handleImageClick(request.imgDir)}
 						aria-label="View image"
 					>
-						<img src={request.imgDir} alt="Request" />
+						<img class="card-image" src={request.imgDir} alt="Request" />
 					</button>
 					<p><strong>ID:</strong> {request.id}</p>
 					<p><strong>Student Number:</strong> {request.studentNumber}</p>
 					<p><strong>Last Updated:</strong> {new Date(request.lastUpdated).toLocaleString()}</p>
 					<div class="buttons">
-						<button on:click={() => handleButtonClick(request.id, true)}>Accept</button>
-						<button on:click={() => handleButtonClick(request.id, false)}>Deny</button>
+						<Button type="primary" onClick={() => handleButtonClick(request.id, true)}>
+							Accept
+						</Button>
+						<Button type="negative" onClick={() => handleButtonClick(request.id, false)}>
+							Deny
+						</Button>
 					</div>
 				</div>
 			{/each}
 		</div>
 	{:else}
-		<p class="no-requests-message">No authentication requests available.</p>
+		<p class="description">No authentication requests available.</p>
 	{/if}
 
-	{#if $isModalOpen}
-		<div
-			class="modal"
-			on:click={closeModal}
-			role="button"
-			tabindex="0"
-			aria-label="Close Modal"
-			on:keydown={(e) => e.key === 'Escape' && closeModal()}
-		>
-			<img src={$modalImage} alt="Modal" />
-		</div>
-	{/if}
+	<DarkBackground isOpen={$isModalOpen}>
+		<button class="image-button" on:click={closeModal} aria-label="Close image">
+			<img class="modal-image" src={$modalImage} alt="Modal" />
+		</button>
+	</DarkBackground>
 </main>
 
 <style>
-	/* 메인 스타일 */
-	main {
-		padding: 1rem;
-	}
-
-	h1 {
-		text-align: center;
-		margin-bottom: 2rem;
-	}
-
-	p {
-		text-align: center;
-		margin-bottom: 1rem;
-	}
-
 	/* 카드 컨테이너 */
 	.card-container {
 		display: flex;
@@ -141,15 +125,17 @@
 		border: none;
 		padding: 0;
 		cursor: pointer;
+		display: flex;
+		justify-content: center;
 	}
 
-	.image-button img {
+	.card-image {
 		width: 100%;
 		height: auto;
 		border-radius: 8px;
 	}
 
-	.image-button img:hover {
+	.card-image:hover {
 		transform: scale(1.05);
 		transition: transform 0.2s ease-in-out;
 	}
@@ -166,63 +152,7 @@
 		gap: 1rem;
 	}
 
-	/* Accept 버튼 스타일 */
-	.buttons button:nth-child(1) {
-		background-color: #38a169;
-	}
-
-	.buttons button:nth-child(1):hover {
-		background-color: #2f855a;
-	}
-
-	.buttons button:nth-child(1):active {
-		background-color: #276749;
-	}
-
-	/* Deny 버튼 스타일 */
-	.buttons button:nth-child(2) {
-		background-color: #e53e3e;
-	}
-
-	.buttons button:nth-child(2):hover {
-		background-color: #c53030;
-	}
-
-	.buttons button:nth-child(2):active {
-		background-color: #9b2c2c;
-	}
-
-	button {
-		padding: 0.8rem 1.2rem;
-		color: white;
-		border: none;
-		border-radius: 5px;
-		cursor: pointer;
-		font-size: 14px;
-	}
-
-	.no-requests-message {
-		text-align: center;
-		font-size: 18px;
-		color: #666;
-		margin-top: 2rem;
-	}
-
-	/* 모달 스타일 */
-	.modal {
-		position: fixed;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-		background-color: rgba(0, 0, 0, 0.8);
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		z-index: 1000;
-	}
-
-	.modal img {
+	.modal-image {
 		max-width: 90%;
 		max-height: 90%;
 		border-radius: 10px;

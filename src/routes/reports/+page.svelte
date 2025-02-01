@@ -1,12 +1,18 @@
 <script lang="ts">
 	import { writable } from 'svelte/store';
 	import { get } from 'svelte/store';
-	import { apiUrl } from '../../store/url';
-	import { fetchWithAuth } from '$lib/utils';
-	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
+	import { fetchWithAuth } from '$lib/utils/fetch';
+	import { apiUrl } from '$lib/stores/url';
 
 	const url = get(apiUrl);
+
+	let reports: {
+		id: number;
+		createdAt: Date;
+		reason: string;
+		isPost: boolean;
+	}[] = [];
 
 	const getReports = async () => {
 		const data = await fetchWithAuth(url + 'report', {
@@ -16,32 +22,11 @@
 		return data;
 	};
 
-	// Report 리스트
-	let reports: {
-		id: number;
-		createdAt: Date;
-		reason: string;
-		isPost: boolean;
-	}[] = [];
-
-	// 초기화 시 데이터 가져오기
 	onMount(async () => {
 		const data = await getReports();
 		reports = data;
 	});
 
-	// 열려 있는 report ID를 관리하는 store
-	const openReportIds = writable<number[]>([]);
-
-	const getReportDetails = async (id: number) => {
-		const data = await fetchWithAuth(url + 'report/' + id, {
-			method: 'POST'
-		});
-
-		return data;
-	};
-
-	// Report 세부 내용
 	const reportDetails: {
 		[id: number]: {
 			reportedPost: {
@@ -62,7 +47,16 @@
 		};
 	} = {};
 
-	// Report를 토글하는 함수
+	const openReportIds = writable<number[]>([]);
+
+	const getReportDetails = async (id: number) => {
+		const data = await fetchWithAuth(url + 'report/' + id, {
+			method: 'POST'
+		});
+
+		return data;
+	};
+
 	const toggleReport = async (id: number) => {
 		if (reportDetails[id] === undefined) {
 			const data = await getReportDetails(id);
@@ -72,6 +66,7 @@
 			ids.includes(id) ? ids.filter((openId) => openId !== id) : [...ids, id]
 		);
 	};
+
 	// 슬라이더 인덱스 관리
 	const sliderIndex: Record<number, number> = {};
 
@@ -87,7 +82,7 @@
 </script>
 
 <main>
-	<h1>Reports</h1>
+	<h1 class="title">Reports</h1>
 
 	{#if reports.length > 0}
 		<div class="card-container">
@@ -124,7 +119,7 @@
 								<!-- Reported Post 세부 내용 -->
 								<p><strong>Title:</strong> {reportDetails[report.id].reportedPost.title}</p>
 								<p><strong>Content:</strong> {reportDetails[report.id].reportedPost.content}</p>
-								<!-- 이미지 캐러셀 부분 수정 -->
+								<!-- 이미지 캐러셀 부분 -->
 								{#if reportDetails[report.id]?.reportedPost.imgDirs.length > 0}
 									<div class="carousel">
 										<!-- 이전 버튼 -->
@@ -179,28 +174,11 @@
 			{/each}
 		</div>
 	{:else}
-		<p class="no-reports-message">No reports available.</p>
+		<p class="description">No reports available.</p>
 	{/if}
 </main>
 
 <style>
-	/* 메인 스타일 */
-	main {
-		padding: 1rem;
-	}
-
-	h1 {
-		text-align: center;
-		margin-bottom: 2rem;
-	}
-
-	.no-reports-message {
-		text-align: center;
-		font-size: 18px;
-		color: #666;
-		margin-top: 2rem;
-	}
-
 	/* 카드 컨테이너 */
 	.card-container {
 		display: flex;

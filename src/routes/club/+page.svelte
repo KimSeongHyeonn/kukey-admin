@@ -1,9 +1,12 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { get } from 'svelte/store';
-	import { apiUrl } from '../../store/url';
-	import { fetchWithAuth, replaceSpecialCharacters } from '$lib/utils';
-	import { goto } from '$app/navigation';
+	import { fetchWithAuth, replaceSpecialCharacters } from '$lib/utils/fetch';
+	import { apiUrl } from '$lib/stores/url';
+	import Button from '$lib/components/Button.svelte';
+	import DarkBackground from '$lib/components/DarkBackground.svelte';
+	import Modal from '$lib/components/Modal.svelte';
+	import Input from '$lib/components/Input.svelte';
 
 	const category = [
 		'전체 카테고리',
@@ -133,6 +136,7 @@
 		const input = event.target as HTMLInputElement;
 		if (input.files && input.files.length > 0) {
 			newClub.image = input.files[0];
+			selectedClub.image = input.files[0];
 		}
 	};
 
@@ -267,7 +271,7 @@
 </script>
 
 <main>
-	<h1>Clubs</h1>
+	<h1 class="title">Clubs</h1>
 
 	<div class="top-container">
 		<!-- 카테고리와 검색어 입력 섹션 -->
@@ -295,8 +299,11 @@
 				</button>
 			</div>
 		</div>
-		<div class="add-club-button-container">
-			<button class="add-club-button" on:click={openAddModal}>Add New Club</button>
+		<!-- 클럽 추가 버튼 -->
+		<div class="add-button-container">
+			<div class="add-button">
+				<Button width="100%" onClick={openAddModal}>Add New Club</Button>
+			</div>
 		</div>
 	</div>
 
@@ -311,10 +318,10 @@
 						<p><strong>Summary:</strong> {club.summary}</p>
 						<p><strong>Regular Meeting:</strong> {club.regularMeeting}</p>
 						<p><strong>Recruitment Period:</strong> {club.recruitmentPeriod}</p>
-						<div class="button-container">
-							<button on:click={() => toggleDetails(club.clubId)}>
+						<div class="detail-button-container">
+							<Button onClick={() => toggleDetails(club.clubId)}>
 								{isExpanded[club.clubId] ? 'Hide Details' : 'Show Details'}
-							</button>
+							</Button>
 						</div>
 					</div>
 					<img src={club.imageUrl} alt="{club.name} Image" class="club-image" />
@@ -328,7 +335,7 @@
 								<p>
 									<strong>Instagram:</strong>
 									{#if club.instagramLink}
-										<a href={'//' + club.instagramLink} target="_blank">Visit Instagram</a>
+										<a class="link" href={club.instagramLink} target="_blank">Visit Instagram</a>
 									{:else}
 										Not Available
 									{/if}
@@ -336,7 +343,7 @@
 								<p>
 									<strong>YouTube:</strong>
 									{#if club.youtubeLink}
-										<a href={'//' + club.youtubeLink} target="_blank">Visit YouTube</a>
+										<a class="link" href={club.youtubeLink} target="_blank">Visit YouTube</a>
 									{:else}
 										Not Available
 									{/if}
@@ -344,10 +351,8 @@
 							</div>
 							<div class="club-actions">
 								<div class="club-buttons">
-									<button class="edit-button" on:click={() => openEditModal(club)}>Edit</button>
-									<button class="delete-button" on:click={() => deleteClub(club.clubId)}
-										>Delete</button
-									>
+									<Button type="secondary" onClick={() => openEditModal(club)}>Edit</Button>
+									<Button type="negative" onClick={() => deleteClub(club.clubId)}>Delete</Button>
 								</div>
 							</div>
 						</div>
@@ -358,178 +363,63 @@
 	</div>
 
 	<!-- 클럽 추가 모달 -->
-	{#if isAddModalOpen}
-		<div class="modal">
-			<div class="modal-content">
-				<h2>Add New Club</h2>
-
-				<div class="modal-input">
-					<div class="form-group">
-						<label for="name">Name:</label>
-						<input id="name" type="text" bind:value={newClub.name} placeholder="Name" />
-					</div>
-
-					<div class="form-group">
-						<label for="category">Category:</label>
-						<select id="category" bind:value={newClub.category} placeholder="Category">
-							{#each newCategory as item}
-								<option value={item}>{item}</option>
-							{/each}
-						</select>
-					</div>
-
-					<div class="form-group">
-						<label for="summary">Summary:</label>
-						<input id="summary" type="text" bind:value={newClub.summary} placeholder="Summary" />
-					</div>
-
-					<div class="form-group">
-						<label for="regularMeeting">Regular Meeting:</label>
-						<input
-							id="regularMeeting"
-							type="text"
-							bind:value={newClub.regularMeeting}
-							placeholder="Regular meeting"
-						/>
-					</div>
-
-					<div class="form-group">
-						<label for="recruitmentPeriod">Recruitment Period:</label>
-						<input
-							id="recruitmentPeriod"
-							type="text"
-							bind:value={newClub.recruitmentPeriod}
-							placeholder="Recruitment period"
-						/>
-					</div>
-
-					<div class="form-group">
-						<label for="instagramLink">Instagram Link:</label>
-						<input
-							id="instagramLink"
-							type="text"
-							bind:value={newClub.instagramLink}
-							placeholder="Instagram link"
-						/>
-					</div>
-
-					<div class="form-group">
-						<label for="youtubeLink">YouTube Link:</label>
-						<input
-							id="youtubeLink"
-							type="text"
-							bind:value={newClub.youtubeLink}
-							placeholder="YouTube link"
-						/>
-					</div>
-
-					<div class="form-group">
-						<label for="description">Description:</label>
-						<textarea id="description" bind:value={newClub.description} placeholder="Description"
-						></textarea>
-					</div>
-
-					<div class="form-group">
-						<label for="image">Image:</label>
-						<input
-							id="image"
-							type="file"
-							accept="image/*"
-							on:change={handleFileChange}
-							placeholder="Image"
-						/>
-					</div>
-				</div>
-
-				<div class="modal-buttons">
-					<button on:click={addNewClub}>Save</button>
-					<button on:click={closeAddModal}>Cancel</button>
-				</div>
+	<DarkBackground isOpen={isAddModalOpen}>
+		<Modal title="Add New Club">
+			<div class="modal-inputs">
+				<Input type="text" name="Name" bind:content={newClub.name} />
+				<Input
+					type="category"
+					name="Category"
+					bind:content={newClub.category}
+					options={newCategory}
+				/>
+				<Input type="text" name="Summary" bind:content={newClub.summary} />
+				<Input type="text" name="Regular Meeting" bind:content={newClub.regularMeeting} />
+				<Input type="text" name="Recruitment Period" bind:content={newClub.recruitmentPeriod} />
+				<Input type="text" name="Instagram Link" bind:content={newClub.instagramLink} />
+				<Input type="text" name="YouTube Link" bind:content={newClub.youtubeLink} />
+				<Input type="textarea" name="Description" bind:content={newClub.description} />
+				<Input type="image" name="Image" onChange={handleFileChange} />
 			</div>
-		</div>
-	{/if}
-
-	{#if isEditModalOpen}
-		<div class="modal">
-			<div class="modal-content">
-				<h2>Edit Club</h2>
-				<div class="modal-input">
-					<div class="form-group">
-						<label for="edit-name">Name:</label>
-						<input id="edit-name" type="text" bind:value={selectedClub.name} />
-					</div>
-
-					<div class="form-group">
-						<label for="edit-category">Category:</label>
-						<select id="edit-category" bind:value={selectedClub.category}>
-							{#each newCategory as item}
-								<option value={item}>{item}</option>
-							{/each}
-						</select>
-					</div>
-
-					<div class="form-group">
-						<label for="edit-summary">Summary:</label>
-						<input id="edit-summary" type="text" bind:value={selectedClub.summary} />
-					</div>
-
-					<div class="form-group">
-						<label for="edit-regularMeeting">Regular Meeting:</label>
-						<input id="edit-regularMeeting" type="text" bind:value={selectedClub.regularMeeting} />
-					</div>
-
-					<div class="form-group">
-						<label for="edit-recruitmentPeriod">Recruitment Period:</label>
-						<input
-							id="edit-recruitmentPeriod"
-							type="text"
-							bind:value={selectedClub.recruitmentPeriod}
-						/>
-					</div>
-
-					<div class="form-group">
-						<label for="edit-instagramLink">Instagram Link:</label>
-						<input id="edit-instagramLink" type="text" bind:value={selectedClub.instagramLink} />
-					</div>
-
-					<div class="form-group">
-						<label for="edit-youtubeLink">YouTube Link:</label>
-						<input id="edit-youtubeLink" type="text" bind:value={selectedClub.youtubeLink} />
-					</div>
-
-					<div class="form-group">
-						<label for="edit-description">Description:</label>
-						<textarea id="edit-description" bind:value={selectedClub.description}></textarea>
-					</div>
-
-					<div class="form-group">
-						<label for="edit-image">Image:</label>
-						<input id="edit-image" type="file" accept="image/*" on:change={handleFileChange} />
-					</div>
-				</div>
-
-				<div class="modal-buttons">
-					<button on:click={updateClub}>Update</button>
-					<button on:click={closeEditModal}>Cancel</button>
-				</div>
+			<div class="modal-buttons">
+				<Button onClick={addNewClub}>Save</Button>
+				<Button type="negative" onClick={closeAddModal}>Cancel</Button>
 			</div>
-		</div>
-	{/if}
+		</Modal>
+	</DarkBackground>
+
+	<!-- 클럽 수정 모달 -->
+	<DarkBackground isOpen={isEditModalOpen}>
+		<Modal title="Edit Club">
+			<div class="modal-inputs">
+				<Input type="text" name="Name" bind:content={selectedClub.name} />
+				<Input
+					type="category"
+					name="Category"
+					bind:content={selectedClub.category}
+					options={newCategory}
+				/>
+				<Input type="text" name="Summary" bind:content={selectedClub.summary} />
+				<Input type="text" name="Regular Meeting" bind:content={selectedClub.regularMeeting} />
+				<Input
+					type="text"
+					name="Recruitment Period"
+					bind:content={selectedClub.recruitmentPeriod}
+				/>
+				<Input type="text" name="Instagram Link" bind:content={selectedClub.instagramLink} />
+				<Input type="text" name="YouTube Link" bind:content={selectedClub.youtubeLink} />
+				<Input type="textarea" name="Description" bind:content={selectedClub.description} />
+				<Input type="image" name="Image" onChange={handleFileChange} />
+			</div>
+			<div class="modal-buttons">
+				<Button onClick={updateClub}>Save</Button>
+				<Button type="negative" onClick={closeEditModal}>Cancel</Button>
+			</div>
+		</Modal>
+	</DarkBackground>
 </main>
 
 <style>
-	/* 메인 스타일 */
-	main {
-		padding: 1rem;
-		max-width: 800px;
-		margin: 0 auto;
-	}
-
-	h1 {
-		text-align: center;
-		margin-bottom: 2rem;
-	}
-
 	.top-container {
 		display: flex;
 		justify-content: space-between;
@@ -585,25 +475,11 @@
 		color: #333;
 	}
 
-	.add-club-button-container {
+	.add-button-container {
 		display: flex;
 		justify-content: flex-end;
 		margin-top: 2rem;
 		width: 50%;
-	}
-
-	.add-club-button {
-		background-color: #3182ce;
-		color: white;
-		border: none;
-		padding: 0.5rem 1rem;
-		border-radius: 5px;
-		cursor: pointer;
-		font-size: 16px;
-	}
-
-	.add-club-button:hover {
-		background-color: #2b6cb0;
 	}
 
 	@media (max-width: 768px) {
@@ -617,15 +493,13 @@
 			width: 100%;
 		}
 
-		.add-club-button-container {
-			justify-content: flex-start;
+		.add-button-container {
 			margin-top: 0rem;
 			width: 100%;
 		}
 
-		.add-club-button {
+		.add-button {
 			width: 100%;
-			text-align: center;
 		}
 	}
 
@@ -677,23 +551,8 @@
 		color: #555;
 	}
 
-	.button-container {
+	.detail-button-container {
 		margin-top: auto;
-	}
-
-	.club-basic-info button {
-		margin-top: 0.5rem;
-		background-color: #3182ce;
-		color: white;
-		border: none;
-		padding: 0.5rem 1rem;
-		border-radius: 5px;
-		cursor: pointer;
-		font-size: 14px;
-	}
-
-	.club-basic-info button:hover {
-		background-color: #2b6cb0;
 	}
 
 	.club-extra-info {
@@ -716,6 +575,10 @@
 		margin: 0.5rem 0;
 	}
 
+	.link {
+		color: #3182ce;
+	}
+
 	.club-actions {
 		align-self: flex-end;
 		display: flex;
@@ -725,33 +588,6 @@
 	.club-buttons {
 		display: flex;
 		gap: 0.5rem;
-	}
-
-	/* 버튼 스타일 */
-	.edit-button,
-	.delete-button {
-		padding: 0.5rem 1rem;
-		border-radius: 5px;
-		font-size: 14px;
-		cursor: pointer;
-		border: none;
-		color: white;
-	}
-
-	.edit-button {
-		background-color: #3182ce;
-	}
-
-	.edit-button:hover {
-		background-color: #2b6cb0;
-	}
-
-	.delete-button {
-		background-color: #e53e3e;
-	}
-
-	.delete-button:hover {
-		background-color: #c53030;
 	}
 
 	@media (max-width: 768px) {
@@ -767,89 +603,15 @@
 		}
 	}
 
-	.modal {
-		position: fixed;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-		background-color: rgba(0, 0, 0, 0.8);
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		z-index: 1000;
-	}
-
-	.modal-content {
-		background: white;
-		padding: 2rem;
-		border-radius: 10px;
-		width: 400px;
-		max-width: 90%;
-		max-height: 90vh;
-		overflow: hidden;
-	}
-
-	.modal-input {
+	.modal-inputs {
 		overflow-y: auto;
 		max-height: 60vh;
 		padding-right: 10px;
-	}
-
-	.modal-content h2 {
-		margin-top: 0;
-	}
-
-	.form-group {
-		margin-bottom: 1rem;
-	}
-
-	.form-group label {
-		display: block;
-		margin-bottom: 0.5rem;
-		font-weight: bold;
-	}
-
-	.form-group input,
-	.form-group textarea,
-	.form-group select {
-		width: 100%;
-		padding: 0.5rem;
-		border: 1px solid #ccc;
-		border-radius: 5px;
-		box-sizing: border-box;
-		font-family: 'Noto Sans KR', 'Roboto', sans-serif;
-	}
-
-	.form-group textarea {
-		resize: none;
-		height: 100px;
 	}
 
 	.modal-buttons {
 		display: flex;
 		justify-content: space-between;
 		margin-top: 1rem;
-	}
-
-	.modal-buttons button {
-		background: #3182ce;
-		color: white;
-		border: none;
-		padding: 0.5rem 1rem;
-		border-radius: 5px;
-		cursor: pointer;
-	}
-
-	.modal-buttons button:hover {
-		background: #2b6cb0;
-	}
-
-	.modal-buttons button:nth-child(2) {
-		background: #e53e3e;
-	}
-
-	.modal-buttons button:nth-child(2):hover {
-		background: #c53030;
 	}
 </style>
