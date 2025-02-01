@@ -2,9 +2,10 @@
 	type ButtonType = 'primary' | 'secondary' | 'negative';
 	export let type: ButtonType = 'primary'; // primary, secondary, negative
 	export let onClick = () => {};
+	export let width = 'auto';
 </script>
 
-<button class={type} on:click={onClick}>
+<button class={type} on:click={onClick} style="width: {width}">
 	<slot />
 </button>
 
