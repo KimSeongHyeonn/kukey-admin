@@ -1,8 +1,9 @@
 <script lang="ts">
 	export let isOpen = false;
+	export let zIndex = 2000;
 </script>
 
-<div class={isOpen ? 'open' : ''}>
+<div class={isOpen ? 'open' : ''} style={`z-index: ${zIndex}`}>
 	<slot />
 </div>
 
@@ -17,7 +18,6 @@
 		display: none;
 		justify-content: center;
 		align-items: center;
-		z-index: 2000;
 	}
 
 	div.open {
