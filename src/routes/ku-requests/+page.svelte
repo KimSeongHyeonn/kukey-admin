@@ -154,7 +154,7 @@
 
 	.modal-image {
 		max-width: 90%;
-		max-height: 90%;
+		max-height: 90vh;
 		border-radius: 10px;
 	}
 </style>
