@@ -1,5 +1,6 @@
-<script>
-	export let type = 'primary'; // primary, secondary, negative
+<script lang="ts">
+	type ButtonType = 'primary' | 'secondary' | 'negative';
+	export let type: ButtonType = 'primary'; // primary, secondary, negative
 	export let onClick = () => {};
 </script>
 
