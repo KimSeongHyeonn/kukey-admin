@@ -76,7 +76,7 @@
 	main {
 		padding-top: 60px;
 		background-color: #f9f9f9;
-		height: 100vh;
+		min-height: 100vh;
 	}
 
 	/* 컨테이너 스타일 */
