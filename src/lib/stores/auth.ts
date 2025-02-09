@@ -14,3 +14,16 @@ const initialAuthState: AuthState = {
 
 // Auth Store
 export const authStore = writable<AuthState>(initialAuthState);
+
+if (sessionStorage.getItem('auth')) {
+	const storedAuth = JSON.parse(sessionStorage.getItem('auth') as string);
+	authStore.set(storedAuth);
+}
+
+authStore.subscribe((value) => {
+	if (value) {
+		sessionStorage.setItem('auth', JSON.stringify(value));
+	} else {
+		sessionStorage.removeItem('auth');
+	}
+});
