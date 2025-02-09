@@ -4,6 +4,7 @@
 	import { onMount } from 'svelte';
 	import { fetchWithAuth } from '$lib/utils/fetch';
 	import { apiUrl } from '$lib/stores/url';
+	import Button from '$lib/components/Button.svelte';
 
 	const url = get(apiUrl);
 
@@ -57,16 +58,6 @@
 		return data;
 	};
 
-	const toggleReport = async (id: number) => {
-		if (reportDetails[id] === undefined) {
-			const data = await getReportDetails(id);
-			reportDetails[id] = data;
-		}
-		openReportIds.update((ids) =>
-			ids.includes(id) ? ids.filter((openId) => openId !== id) : [...ids, id]
-		);
-	};
-
 	// 슬라이더 인덱스 관리
 	const sliderIndex: Record<number, number> = {};
 
@@ -78,6 +69,46 @@
 	const prevSlide = (id: number) => {
 		const length = reportDetails[id].reportedPost.imgDirs.length;
 		sliderIndex[id] = sliderIndex[id] ? (sliderIndex[id] - 1) % length : length - 1;
+	};
+
+	// 신고 처리 요청
+	let banDays: Record<number, number> = {};
+
+	const toggleReport = async (id: number) => {
+		if (reportDetails[id] === undefined) {
+			const data = await getReportDetails(id);
+			reportDetails[id] = data;
+		}
+		if (banDays[id] === undefined) {
+			banDays[id] = 3;
+		}
+		openReportIds.update((ids) =>
+			ids.includes(id) ? ids.filter((openId) => openId !== id) : [...ids, id]
+		);
+	};
+
+	const acceptReport = async (id: number, banDays: number) => {
+		const reqJson = {
+			banDays
+		};
+		const data = await fetchWithAuth(url + 'report/' + id + '/accept', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(reqJson)
+		});
+		reports = await getReports();
+		alert('신고가 수락되었습니다.');
+	};
+
+	const rejectReport = async (id: number) => {
+		const data = await fetchWithAuth(url + 'report/' + id + '/reject', {
+			method: 'POST'
+		});
+
+		reports = await getReports();
+		alert('신고가 거절되었습니다.');
 	};
 </script>
 
@@ -162,12 +193,31 @@
 							{:else}
 								<p>Loading...</p>
 							{/if}
-
-							<p><strong>Report Count:</strong> {reportDetails[report.id]?.reportCount}</p>
-							<p>
-								<strong>Reported User:</strong>
-								{reportDetails[report.id]?.reportedUser.username}
-							</p>
+							<div class="extra-info-content">
+								<div class="extra-details">
+									<p><strong>Report Count:</strong> {reportDetails[report.id]?.reportCount}</p>
+									<p>
+										<strong>Reported User:</strong>
+										{reportDetails[report.id]?.reportedUser.username}
+									</p>
+								</div>
+								<div class="report-actions">
+									<div class="report-buttons">
+										<input
+											class="ban-days-input"
+											type="number"
+											min="1"
+											placeholder="Days"
+											bind:value={banDays[report.id]}
+										/>
+										<Button
+											type="secondary"
+											onClick={() => acceptReport(report.id, banDays[report.id])}>Accept</Button
+										>
+										<Button type="negative" onClick={() => rejectReport(report.id)}>Deny</Button>
+									</div>
+								</div>
+							</div>
 						</div>
 					{/if}
 				</div>
@@ -352,5 +402,62 @@
 
 	.card-details p {
 		margin: 0.5rem 0;
+	}
+
+	.extra-info-content {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		gap: 2rem;
+	}
+
+	.extra-details {
+		flex: 2;
+	}
+
+	.report-actions {
+		align-self: flex-end;
+		display: flex;
+		gap: 0.5rem;
+	}
+
+	.report-buttons {
+		display: flex;
+		gap: 0.5rem;
+	}
+
+	@media (max-width: 768px) {
+		.extra-info-content {
+			flex-direction: column;
+			align-items: flex-start;
+			gap: 1rem;
+		}
+
+		.report-actions {
+			align-self: flex-start;
+			width: 100%;
+		}
+	}
+
+	.ban-days-input {
+		width: 80px;
+		padding: 0.5rem;
+		border: 1px solid #ccc;
+		border-radius: 5px;
+		font-size: 16px;
+		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+		transition:
+			border-color 0.3s,
+			box-shadow 0.3s;
+	}
+
+	.ban-days-input:focus {
+		border-color: #3182ce;
+		box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.2);
+		outline: none;
+	}
+
+	.ban-days-input::placeholder {
+		color: #999;
 	}
 </style>
