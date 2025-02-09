@@ -51,7 +51,7 @@
 
 	const getReportDetails = async (id: number) => {
 		const data = await fetchWithAuth(url + 'report/' + id, {
-			method: 'POST'
+			method: 'GET'
 		});
 
 		return data;
