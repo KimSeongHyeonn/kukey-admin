@@ -12,7 +12,7 @@
 	const url = get(apiUrl);
 
 	// 배너 리스트
-	let banners: { id: number; imageUrl: string; title: string }[] = [];
+	let banners: { id: number; imageUrl: string; title: string; link: string | null }[] = [];
 
 	// 배너 리스트 가져오기
 	const getBanners = async () => {
@@ -46,6 +46,7 @@
 	let selectedFile: File | null = null;
 	let selectedFileName: string = '';
 	let bannerTitle: string = '';
+	let bannerLink: string = '';
 	let isModalOpen = false; // 모달창 상태 관리
 
 	// 파일 선택 핸들러
@@ -72,6 +73,9 @@
 		const formData = new FormData();
 		formData.append('image', selectedFile);
 		formData.append('title', bannerTitle);
+		if (bannerLink) {
+			formData.append('link', bannerLink);
+		}
 
 		// POST 요청
 		const data = await fetchWithAuth(url + 'banner', {
@@ -115,6 +119,7 @@
 						<div class="banner-info-text">
 							<p><strong>Title:</strong> {banner.title}</p>
 							<p><strong>ID:</strong> {banner.id}</p>
+							<p><strong>Link:</strong> {banner.link ?? 'no link available'}</p>
 						</div>
 						<Button type="negative" onClick={() => deleteBanner(banner.id)}>Delete</Button>
 					</div>
@@ -127,12 +132,13 @@
 	<DarkBackground isOpen={isModalOpen}>
 		<Modal title="Upload New Banner">
 			<Input type="text" name="Title" bind:content={bannerTitle} />
+			<Input type="text" name="Link" bind:content={bannerLink} />
 			<Input type="image" name="Image" onChange={handleFileChange} />
 			<div class="modal-buttons">
 				<Button onClick={uploadBanner}>Upload</Button>
 				<Button type="negative" onClick={() => (isModalOpen = false)}>Cancel</Button>
-			</div></Modal
-		>
+			</div>
+		</Modal>
 	</DarkBackground>
 </main>
 
