@@ -1,14 +1,14 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import Button from '$lib/components/Button.svelte';
 	import { login } from '$lib/utils/auth';
-	import { gotoWithBase } from '$lib/utils/goto';
 
 	let email = '';
 	let password = '';
 
 	const handleLogin = async () => {
 		if (email && password) {
-			if (await login(email, password)) gotoWithBase('/ku-requests');
+			if (await login(email, password)) goto('/ku-requests');
 		} else {
 			alert('이메일과 비밀번호를 입력하세요.');
 		}

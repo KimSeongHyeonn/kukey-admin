@@ -1,7 +1,7 @@
+import { goto } from '$app/navigation';
 import { authStore } from '$lib/stores/auth';
 import { isLoading } from '$lib/stores/loading';
 import { refreshToken } from '$lib/utils/auth';
-import { gotoWithBase } from '$lib/utils/goto';
 import { get } from 'svelte/store';
 
 export const fetchWithAuth = async (url: string, options: RequestInit = {}): Promise<any> => {
@@ -26,7 +26,7 @@ export const fetchWithAuth = async (url: string, options: RequestInit = {}): Pro
 					return fetchWithAuth(url, options);
 				} else {
 					alert('로그인이 필요합니다.');
-					gotoWithBase('/');
+					goto('/');
 				}
 			} else if (res.status === 404) {
 				alert('페이지를 찾을 수 없습니다.');

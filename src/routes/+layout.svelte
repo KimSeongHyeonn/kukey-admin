@@ -1,10 +1,9 @@
 <script lang="ts">
 	import '$lib/styles/global.css';
-	import { afterNavigate, beforeNavigate } from '$app/navigation';
+	import { afterNavigate, beforeNavigate, goto } from '$app/navigation';
 	import { writable } from 'svelte/store';
 	import { isLoading } from '$lib/stores/loading';
 	import { checkAuth } from '$lib/utils/auth';
-	import { gotoWithBase } from '$lib/utils/goto';
 	import DarkBackground from '$lib/components/DarkBackground.svelte';
 
 	// 햄버거 메뉴 상태 관리
@@ -13,10 +12,10 @@
 	// 페이지 이동 함수
 	const navigate = (href: string) => {
 		if (!checkAuth()) {
-			gotoWithBase('/');
+			goto('/');
 			alert('로그인이 필요합니다.');
 		} else {
-			gotoWithBase(href);
+			goto(href);
 			isMenuOpen.set(false); // 메뉴 닫기
 		}
 	};
